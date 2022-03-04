@@ -82,7 +82,8 @@ def comando(entry):
 def complementoM():
     global apuntadorC
     nextStr = entry[apuntador]
-    
+    print(apuntadorC)
+    print(len(entry))
     if nextStr[apuntadorC] == DIAGONAL:
         if apuntadorC+1 < len(nextStr):
             apuntadorC += 1
@@ -107,6 +108,10 @@ def complementoM():
     elif string.ascii_letters.__contains__(nextStr[apuntadorC]):
         palabra()
 
+    elif nextStr[apuntadorC] == '.' and len(nextStr)==1:
+        print('error')
+        exit(0)
+        
     elif nextStr[apuntadorC] == '.' and nextStr[apuntadorC+1] == '.':
         n = 'Bien'
     else:
