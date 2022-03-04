@@ -35,35 +35,53 @@ def comando(entry):
         elif entry[apuntador] == MOVER:
             
             apuntador += 1
-            complementoM(entry)
-
-            return 'Correcto a'
+            if complementoM(entry) == 'Error':
+                return 'Error'
+            else:
+                return 'Correcto'
 
         elif entry[apuntador] == EDITAR:
             
             apuntador += 1
-            direccion(entry)
-            direccion(entry)
+            # verificar
 
-            return 'Correcto'
+            response1 = direccion(entry)
+            response2 = direccion(entry)
+
+            print(response1)
+            print(response2)
+            if response1 is None and response2 is None:
+                return 'Correcto'
+            elif response1 is None and response2 == 'Error':
+                return 'Error'
+            elif response1 == 'Error' and response2 == 'Error':
+                return 'Error'
 
         elif entry[apuntador] == REMOVER:
             
+            #error index out of range
             apuntador += 1
-            direccion(entry)
+            responseD = direccion(entry) 
             apuntador += 1
-            palabra(entry[apuntador])
+            responseP = palabra(entry[apuntador])
 
-            return 'Correcto'
+            
+            if responseD is None and responseP == 'Correcto':
+                return 'Correcto'
+            else: 
+                return 'Error'
 
         elif entry[apuntador] == CREARA:
             
             apuntador += 1
-            direccion(entry)
+            responseD = direccion(entry)
             apuntador += 1
-            palabra(entry[apuntador])
+            responseP = palabra(entry[apuntador])
 
-            return 'Correcto'
+            if responseD is None and responseP == 'Correcto':
+                return 'Correcto'
+            else: 
+                return 'Error'
         
         elif entry[apuntador] == MOSTRAR:
             
@@ -76,11 +94,17 @@ def comando(entry):
                     return 'Correcto'
                 
                 elif apuntador < len(entry):
-                    direccion(entry)
-                    return 'Correcto'
+                    responseD = direccion(entry)
+                    if responseD is None:
+                        return 'Correcto'
+                    else:
+                        return 'Error'
             elif entry[apuntador][0] == DIAGONAL:
-                direccion(entry)
-                return 'Correcto'
+                responseD = direccion(entry)
+                if responseD is None:
+                    return 'Correcto'
+                else:
+                    return 'Error'
 
         else:
             return 'Error'
@@ -95,6 +119,7 @@ def comando(entry):
         else:       
         
             return 'Error'
+
 def complementoM(entry):
     global apuntadorC
     nextStr = entry[apuntador]
@@ -113,11 +138,12 @@ def complementoM(entry):
         
             palabra(''.join(t))
 
-            print(nextStr[apuntadorC])
             if nextStr[apuntadorC] == DIAGONAL:
-                complementoM(entry)
+                if complementoM(entry) != 'Error':
+                    complementoM(entry)
+                else:
+                    return 'Error'
             else:
-                print('entré')
                 return 'Error'
     
         
@@ -125,8 +151,7 @@ def complementoM(entry):
         palabra(nextStr)
 
     elif nextStr[apuntadorC] == '.' and len(nextStr)==1:
-        print('error')
-        exit(0)
+        return 'Error'
         
     elif nextStr[apuntadorC] == '.' and nextStr[apuntadorC+1] == '.':
         return 'Correcto'
@@ -137,6 +162,7 @@ def direccion(entry):
     global apuntadorC
     nextStr = entry[apuntador]
 
+    print(apuntador)
     if nextStr[apuntadorC] == DIAGONAL:
         if apuntadorC+1 < len(nextStr):
             apuntadorC += 1
@@ -151,10 +177,12 @@ def direccion(entry):
             palabra(''.join(t))
                
             if nextStr[apuntadorC] == DIAGONAL:
-                direccion(entry) 
+                if direccion(entry) != 'Error':
+                    direccion(entry)
+                else:
+                    return 'Error'
             else:
                 return 'Error'
-
 
 def palabra(palabra):
     p = re.compile('(\w|_|-)+')
