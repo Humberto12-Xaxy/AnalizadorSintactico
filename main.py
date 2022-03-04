@@ -1,5 +1,11 @@
 import string
 import re
+import sys
+from PySide6.QtCore import *
+from PySide6.QtGui import *
+from PySide6.QtWidgets import *
+
+from view.mainView import Ui_MainWindow
 
 CREAR = 'mkdir'
 MOVER = 'cd'
@@ -24,29 +30,40 @@ def comando(entry):
 
             palabra(entry[apuntador])
 
+            return 'Correcto'
+
         elif entry[apuntador] == MOVER:
             
             apuntador += 1
-            complementoM()
+            complementoM(entry)
+
+            return 'Correcto a'
 
         elif entry[apuntador] == EDITAR:
             
             apuntador += 1
-            direccion()
-            direccion()
+            direccion(entry)
+            direccion(entry)
+
+            return 'Correcto'
+
         elif entry[apuntador] == REMOVER:
             
             apuntador += 1
-            direccion()
+            direccion(entry)
             apuntador += 1
             palabra(entry[apuntador])
+
+            return 'Correcto'
 
         elif entry[apuntador] == CREARA:
             
             apuntador += 1
-            direccion()
+            direccion(entry)
             apuntador += 1
             palabra(entry[apuntador])
+
+            return 'Correcto'
         
         elif entry[apuntador] == MOSTRAR:
             
@@ -56,16 +73,17 @@ def comando(entry):
                 apuntador += 1
                 
                 if  apuntador == len(entry):
-                    n = 'bien'
+                    return 'Correcto'
                 
                 elif apuntador < len(entry):
-                    direccion()
+                    direccion(entry)
+                    return 'Correcto'
             elif entry[apuntador][0] == DIAGONAL:
-                direccion()
+                direccion(entry)
+                return 'Correcto'
 
         else:
-            print('error')
-            exit(0)
+            return 'Error'
     else:
         
         if entry[apuntador] == MOSTRAR:
@@ -73,13 +91,11 @@ def comando(entry):
             apuntador += 1
             #Ls
             if apuntador == len(entry):
-                n = 'bien'
+               return 'Correcto'
         else:       
         
-            print('error')
-            exit(0)
-
-def complementoM():
+            return 'Error'
+def complementoM(entry):
     global apuntadorC
     nextStr = entry[apuntador]
     
@@ -92,31 +108,27 @@ def complementoM():
                     t.append(nextStr[apuntadorC])
                     apuntadorC += 1
                 else:
-                    print('ERROR')
-                    exit(0)
+                    return 'Error'
         
             palabra(''.join(t))
 
+            print(nextStr[apuntadorC])
             if nextStr[apuntadorC] == DIAGONAL:
-                complementoM()
+                complementoM(entry)
             else:
-                print('ERROR')
-                exit(0)
+                print('entré')
+                return 'Error'
     
         
     elif string.ascii_letters.__contains__(nextStr[apuntadorC]):
-        palabra()
+        palabra(nextStr)
 
     elif nextStr[apuntadorC] == '.' and nextStr[apuntadorC+1] == '.':
-        n = 'Bien'
+        return 'Correcto'
     else:
-        print('error')
-        exit(0)
+        return 'Error'
 
-def complementoMO():   
-    print()
-
-def direccion():
+def direccion(entry):
     global apuntadorC
     nextStr = entry[apuntador]
 
@@ -129,32 +141,47 @@ def direccion():
                     t.append(nextStr[apuntadorC])
                     apuntadorC += 1
                 else:
-                    print('ERROR')
-                    exit(0)
+                    return 'Error'
         
             palabra(''.join(t))
-
+               
             if nextStr[apuntadorC] == DIAGONAL:
-                direccion()
+                direccion(entry) 
             else:
-                print('ERROR')
-                exit(0)
+                return 'Error'
 
-def sDireccion():
-    print()
 
 def palabra(palabra):
     p = re.compile('(\w|_|-)+')
 
     if p.fullmatch(palabra) is None: 
-        print('Error')
-        exit(0)
+        return 'Error'
+    else:
+        return 'Correcto'
+class main(QMainWindow):
+    def __init__(self):
+        QMainWindow.__init__(self)
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.ui.pushButton.clicked.connect(self.comprobacion)
+    
+    def comprobacion(self):
+        entry = self.ui.lineEdit.text().strip(' ').split()
+        response = comando(entry= entry)
+
+        self.ui.message.setText(response)
+        print('Termino bien')
 
 
 if __name__ == '__main__':
-    entry = input('Escribe el comando de linux: ').strip(' ').split()
+    app = QApplication(sys.argv)
+    window = main()
+    window.show()
+    sys.exit(app.exec())
+    # entry = input('Escribe el comando de linux: ').strip(' ').split()
 
-    comando(entry=entry)
-    print('Termino bien')
+    # comando(entry=entry)
+    # print('Termino bien')
+
     # print(string.ascii_letters.__contains__('a'))
 
