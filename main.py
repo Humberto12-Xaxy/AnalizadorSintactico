@@ -21,44 +21,61 @@ apuntadorC = 0
 def comando(entry):
 
     global apuntador
+    global apuntadorC
 
     if len(entry)!=1:
 
         if entry[apuntador] == CREAR:
-        
-            apuntador += 1
+            if len(entry) == 2:
+                apuntador += 1
 
-            palabra(entry[apuntador])
+                palabra(entry[apuntador])
 
-            return 'Correcto'
+                return 'Correcto'
+            else: 
+                return 'Error'
 
         elif entry[apuntador] == MOVER:
-            
-            apuntador += 1
-            if complementoM(entry) == 'Error':
-                return 'Error'
-            else:
-                return 'Correcto'
+            if len(entry) == 2:
+                apuntador += 1
 
+                if complementoM(entry) == 'Error':
+                    return 'Error'
+                else:
+                    return 'Correcto'
+            else: 
+                return 'Error'
+            
         elif entry[apuntador] == EDITAR:
-            
-            apuntador += 1
-            # verificar
+            if len(entry) == 5:
+                apuntador += 1
+                # verificar
 
-            response1 = direccion(entry)
-            response2 = direccion(entry)
+                response1 = direccion(entry)
+                apuntador += 1
+                print(response1)
+                apuntadorC = 0
+                responseP = palabra(entry[apuntador])
+                print(responseP)
+                apuntador += 1
+                response2 = direccion(entry)
+                apuntadorC = 0
+                print(response2)
+                apuntador += 1
+                responseP2 = palabra(entry[apuntador])
+                print(responseP2)
 
-            print(response1)
-            print(response2)
-            if response1 is None and response2 is None:
-                return 'Correcto'
-            elif response1 is None and response2 == 'Error':
-                return 'Error'
-            elif response1 == 'Error' and response2 == 'Error':
+                if response1 is None and response2 is None and responseP =='Correcto' and responseP2 =='Correcto':
+                    return 'Correcto'
+                else:
+                    return 'Error'
+            else:
                 return 'Error'
 
         elif entry[apuntador] == REMOVER:
             
+            
+
             #error index out of range
             apuntador += 1
             responseD = direccion(entry) 
@@ -121,12 +138,14 @@ def comando(entry):
             return 'Error'
 
 def complementoM(entry):
+
     global apuntadorC
     nextStr = entry[apuntador]
-    print(apuntadorC)
-    print(len(entry))
+
     if nextStr[apuntadorC] == DIAGONAL:
+
         if apuntadorC+1 < len(nextStr):
+
             apuntadorC += 1
             t = []
             while nextStr[apuntadorC] != DIAGONAL:
@@ -136,7 +155,8 @@ def complementoM(entry):
                 else:
                     return 'Error'
         
-            palabra(''.join(t))
+            if palabra(''.join(t)) == 'Error':
+                return 'Error'
 
             if nextStr[apuntadorC] == DIAGONAL:
                 if complementoM(entry) != 'Error':
@@ -162,19 +182,20 @@ def direccion(entry):
     global apuntadorC
     nextStr = entry[apuntador]
 
-    print(apuntador)
     if nextStr[apuntadorC] == DIAGONAL:
         if apuntadorC+1 < len(nextStr):
             apuntadorC += 1
             t = []
             while nextStr[apuntadorC] != DIAGONAL:
+                
                 if apuntadorC+1 < len(nextStr):
                     t.append(nextStr[apuntadorC])
                     apuntadorC += 1
                 else:
                     return 'Error'
         
-            palabra(''.join(t))
+            if palabra(''.join(t)) == 'Error':
+                return 'Error'
                
             if nextStr[apuntadorC] == DIAGONAL:
                 if direccion(entry) != 'Error':
@@ -191,6 +212,7 @@ def palabra(palabra):
         return 'Error'
     else:
         return 'Correcto'
+
 class main(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
@@ -199,18 +221,26 @@ class main(QMainWindow):
         self.ui.pushButton.clicked.connect(self.comprobacion)
     
     def comprobacion(self):
+        global apuntador
+        global apuntadorC
         entry = self.ui.lineEdit.text().strip(' ').split()
         response = comando(entry= entry)
 
         self.ui.message.setText(response)
-        print('Termino bien')
+        apuntador = 0
+        apuntadorC = 0
+        
 
 
 if __name__ == '__main__':
+
     app = QApplication(sys.argv)
     window = main()
     window.show()
     sys.exit(app.exec())
+
+
+
     # entry = input('Escribe el comando de linux: ').strip(' ').split()
 
     # comando(entry=entry)
