@@ -82,7 +82,9 @@ def comando(entry):
             apuntador += 1
             responseP = palabra(entry[apuntador])
 
-            
+            print(responseD)
+            print(responseP)
+
             if responseD is None and responseP == 'Correcto':
                 return 'Correcto'
             else: 
@@ -94,6 +96,8 @@ def comando(entry):
             responseD = direccion(entry)
             apuntador += 1
             responseP = palabra(entry[apuntador])
+
+            
 
             if responseD is None and responseP == 'Correcto':
                 return 'Correcto'
@@ -142,6 +146,9 @@ def complementoM(entry):
     global apuntadorC
     nextStr = entry[apuntador]
 
+    if apuntadorC== 0 and nextStr != DIAGONAL:
+        return 'Error'
+        
     if nextStr[apuntadorC] == DIAGONAL:
 
         if apuntadorC+1 < len(nextStr):
@@ -181,6 +188,9 @@ def complementoM(entry):
 def direccion(entry):
     global apuntadorC
     nextStr = entry[apuntador]
+
+    if apuntadorC== 0 and nextStr != DIAGONAL:
+        return 'Error'
 
     if nextStr[apuntadorC] == DIAGONAL:
         if apuntadorC+1 < len(nextStr):
@@ -238,7 +248,6 @@ if __name__ == '__main__':
     window = main()
     window.show()
     sys.exit(app.exec())
-
 
 
     # entry = input('Escribe el comando de linux: ').strip(' ').split()
